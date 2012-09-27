@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "3.0.0rc4",
     "express-partials": "*",
-    "hjs": "*"
+    "hjs": "*",
+    "underscore": "*"
   }
 }
