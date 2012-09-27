@@ -1,0 +1,19 @@
+<form class="form-horizontal" method="post">
+  <div class="control-group">
+    <label class="control-label" for="email">Email</label>
+    <div class="controls">
+      <input type="text" id="email" placeholder="Email" name="email">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="password">Password</label>
+    <div class="controls">
+      <input type="password" id="password" placeholder="Password" name="password">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">{{button}}</button>
+    </div>
+  </div>
+</form>
