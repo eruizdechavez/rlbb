@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>"Real Life" Backbone</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+  <!-- Nav Bar -->
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <a class="brand" href="#">"Real Life" Backbone</a>
+      <ul class="nav pull-right">
+        <li><a href="#" class="nav-link out register">Register</a></li>
+        <li><a href="#" class="nav-link out login">Login</a></li>
+        <li><a href="#" class="nav-link in profile">Profile</a></li>
+        <li><a href="#" class="nav-link in logout">Logout</a></li>
+        <li><a href="#" class="nav-link in cancel">Cancel Account</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="container">
+
+    <!-- Display User Details -->
+    <div class="row premium">
+      <div class="span12">
+        Welcome <span class="firstName"></span>!
+      </div>
+    </div>
+
+    <div class="row premium">
+      <div class="span12">
+        <hr>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sit amet mollis ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam id molestie mi. Fusce vitae risus urna. Sed pretium, ipsum vel gravida aliquam, nibh quam convallis dui, in porttitor justo eros eu justo. Integer scelerisque mollis purus sed semper. Etiam venenatis sem ut sem bibendum eleifend. Praesent elit magna, tempus vel semper sit amet, lobortis sit amet nisi. Praesent eget metus neque, ut auctor neque. Phasellus at nibh nec nunc posuere interdum. Curabitur ornare, tortor id posuere luctus, tellus ante condimentum arcu, ultricies adipiscing quam diam nec nulla.</p>
+
+        <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque viverra, sem a imperdiet varius, turpis mi tempus sapien, nec facilisis lectus sem at massa. In elit lorem, consectetur in posuere sit amet, porttitor eu nibh. Mauris cursus suscipit ullamcorper. Aenean porttitor magna consectetur libero sagittis sed vehicula odio adipiscing. In a aliquam enim. Fusce vitae laoreet nisl. Duis tellus ligula, sodales id vestibulum nec, molestie nec eros.</p>
+      </div>
+      <div class="span4">
+        <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque viverra, sem a imperdiet varius, turpis mi tempus sapien, nec facilisis lectus sem at massa. In elit lorem, consectetur in posuere sit amet, porttitor eu nibh. Mauris cursus suscipit ullamcorper. Aenean porttitor magna consectetur libero sagittis sed vehicula odio adipiscing. In a aliquam enim. Fusce vitae laoreet nisl. Duis tellus ligula, sodales id vestibulum nec, molestie nec eros.</p>
+
+        <p>Donec auctor consequat erat quis dapibus. Nulla facilisis porta euismod. Phasellus at massa arcu, a dictum elit. Donec quis dolor nulla. Nullam et odio vel risus laoreet placerat. Aenean sed nisl sapien, quis rutrum purus. Suspendisse potenti. Nullam sit amet mi enim. Curabitur nec lectus et sapien viverra consequat et ac arcu. Suspendisse sodales feugiat ipsum id interdum. Nunc id tortor risus, sit amet pulvinar ipsum. Nam molestie erat non libero tristique tincidunt in bibendum metus. In nisi orci, semper fermentum tincidunt non, posuere pretium enim. Morbi pharetra fermentum tortor a molestie. In purus metus, porttitor vel lacinia nec, venenatis quis arcu.</p>
+      </div>
+      <div class="span4">
+        <p>Aliquam erat volutpat. Sed at ligula et nulla varius malesuada ut in quam. Vestibulum metus augue, rhoncus nec egestas at, pulvinar ut tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla placerat massa ac sem tincidunt et porta leo scelerisque. Phasellus suscipit venenatis vehicula. Mauris accumsan accumsan quam sed pharetra. Etiam sodales risus sed neque ornare dictum. Morbi consectetur ornare metus ac iaculis. Nullam nisi ligula, eleifend vel tincidunt eget, dignissim vitae elit. Vestibulum quis orci nulla. Cras diam quam, pulvinar suscipit hendrerit sit amet, fringilla eu tellus. Fusce a odio lacus. Curabitur a sollicitudin mauris. Mauris convallis lorem non nulla laoreet consequat.</p>
+
+        <p>Vivamus facilisis, tortor vulputate suscipit viverra, lacus elit commodo purus, nec commodo velit eros nec massa. Integer dapibus, tortor pulvinar ullamcorper malesuada, mi nisl luctus erat, vitae rhoncus diam turpis non magna. Sed lacus ligula, congue a egestas ac, convallis in dui. Etiam adipiscing molestie purus quis rhoncus. Donec fringilla malesuada dapibus. Sed elementum egestas magna vitae venenatis. Nam venenatis ornare porttitor. Nulla a odio lorem, non porta lectus. Pellentesque interdum mauris euismod felis ullamcorper adipiscing.</p>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal hide fade modal-dialog" id="register-modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Register</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="control-group">
+            <label class="control-label" for="register-email">Email</label>
+            <div class="controls">
+              <input type="text" id="register-email" placeholder="Email">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="register-password">Password</label>
+            <div class="controls">
+              <input type="password" id="register-password" placeholder="Password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary register">Register</a>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal hide fade modal-dialog" id="login-modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Login</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="control-group">
+            <label class="control-label" for="login-email">Email</label>
+            <div class="controls">
+              <input type="text" id="login-email" placeholder="Email">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="login-password">Password</label>
+            <div class="controls">
+              <input type="password" id="login-password" placeholder="Password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary login">Login</a>
+      </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal hide fade modal-dialog" id="profile-modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><span class="firstName"></span> Settings</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="control-group">
+            <label class="control-label" for="profile-first-name">First Name</label>
+            <div class="controls">
+              <input type="text" id="profile-first-name" placeholder="First Name">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="profile-last-name">Last Name</label>
+            <div class="controls">
+              <input type="text" id="profile-last-name" placeholder="Last Name">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="profile-image">Image URL</label>
+            <div class="controls">
+              <input type="text" id="profile-image" placeholder="Image URL">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+
+    <!-- Cancel Modal -->
+    <div class="modal hide fade">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+      </div>
+      <div class="modal-body">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Script Tags Below -->
+  <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/backbone.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+
+  <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

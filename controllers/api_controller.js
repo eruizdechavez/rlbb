@@ -12,10 +12,36 @@ exports.getUsers = function (req, res, next) {
 	});
 };
 
+exports.getUser = function (req, res, next) {
+	if (req.params.id === undefined) {
+		req.params.id = req.request.email;
+	}
+
+	if (!users.hasOwnProperty(req.params.id)) {
+		return res.send({
+			status: 404,
+			message: 'user not found'
+		}, 404);
+	}
+
+	return res.send({
+		status: 200,
+		user: cleanupUser(users[req.params.id])
+	});
+};
+
+exports.deleteUser = function (req, res, next) {
+	delete users[req.request.email];
+
+	return res.send({
+		status: 200
+	});
+};
+
 exports.postUsers = function (req, res, next) {
 	var user = {
-		email: req.body.email,
-		password: req.body.password,
+		email: req.request.email,
+		password: req.request.password,
 		firstName: '',
 		lastName: '',
 		image: '',
@@ -26,7 +52,7 @@ exports.postUsers = function (req, res, next) {
 	var hash = crypto.createHash('md5');
 	user.token = hash.update(JSON.stringify(user), 'utf8').digest('base64');
 
-	users[req.body.email] = user;
+	users[req.request.email] = user;
 
 	return res.send({
 		status: 200,
@@ -35,14 +61,14 @@ exports.postUsers = function (req, res, next) {
 };
 
 exports.putUser = function (req, res, next) {
-	var newUser = _.extend({}, users[req.body.email], req.body, {
+	var newUser = _.extend({}, users[req.request.email], req.request, {
 		updated: Date.now(),
-		token: req.body.token
+		token: req.request.token
 	});
 
 	var hash = crypto.createHash('md5');
 
-	users[req.body.email] = newUser;
+	users[req.request.email] = newUser;
 
 	return res.send({
 		status: 200,
@@ -51,7 +77,7 @@ exports.putUser = function (req, res, next) {
 };
 
 exports.auth = function (req, res, next) {
-	var user = _.extend({}, users[req.body.email], {
+	var user = _.extend({}, users[req.request.email], {
 		updated: Date.now(),
 		token: ''
 	});
@@ -59,16 +85,17 @@ exports.auth = function (req, res, next) {
 	var hash = crypto.createHash('md5');
 	user.token = hash.update(JSON.stringify(user), 'utf8').digest('base64');
 
-	users[req.body.email] = user;
+	users[req.request.email] = user;
 
 	return res.send({
 		status: 200,
+		user: cleanupUser(user),
 		token: user.token
 	});
 };
 
 exports.hasEmailPassword = function (req, res, next) {
-	if (!req.body.email || !req.body.password) {
+	if (!req.request.email || !req.request.password) {
 		return res.send({
 			message: 'missing fields',
 			status: 400
@@ -79,7 +106,7 @@ exports.hasEmailPassword = function (req, res, next) {
 };
 
 exports.hasEmailToken = function (req, res, next) {
-	if (!req.body.email || !req.body.token) {
+	if (!req.request.email || !req.request.token) {
 		return res.send({
 			message: 'missing fields',
 			status: 400
@@ -90,7 +117,7 @@ exports.hasEmailToken = function (req, res, next) {
 };
 
 exports.userExists = function (req, res, next) {
-	if (!users.hasOwnProperty(req.body.email)) {
+	if (!users.hasOwnProperty(req.request.email)) {
 		return res.send({
 			message: 'user not found',
 			status: 404
@@ -101,7 +128,7 @@ exports.userExists = function (req, res, next) {
 }
 
 exports.userNotPresent = function (req, res, next) {
-	if (users.hasOwnProperty(req.body.email)) {
+	if (users.hasOwnProperty(req.request.email)) {
 		return res.send({
 			message: 'email already exist',
 			status: 403
@@ -112,7 +139,7 @@ exports.userNotPresent = function (req, res, next) {
 };
 
 exports.validEmailPassword = function (req, res, next) {
-	if (users[req.body.email].password !== req.body.password) {
+	if (users[req.request.email].password !== req.request.password) {
 		return res.send({
 			message: 'wrong credentials',
 			status: 401
@@ -123,7 +150,7 @@ exports.validEmailPassword = function (req, res, next) {
 };
 
 exports.validEmailToken = function (req, res, next) {
-	if (users[req.body.email].token !== req.body.token) {
+	if (users[req.request.email].token !== req.request.token) {
 		return res.send({
 			message: 'wrong credentials',
 			status: 401
@@ -133,6 +160,13 @@ exports.validEmailToken = function (req, res, next) {
 	return next();
 };
 
+exports.request = function (req, res, next) {
+	if (!req.request) {
+		req.request = _.extend({}, req.query, req.body);
+	}
+
+	next();
+};
 
 function cleanupUser(user) {
 	var cleanUser = _.extend({}, user);
