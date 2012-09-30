@@ -1,5 +1,4 @@
-var main = require('./controllers/main_controller'),
-	api = require('./controllers/api_controller');
+var api = require('./controllers/api_controller');
 
 module.exports = function (app) {
 	// Get all users
