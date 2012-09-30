@@ -4,7 +4,7 @@ This is a really simple Backbone demo that aims to show a basic usage of
 Backbone Models and Views; For simplicity the API was build with NodeJS and
 Express.
 
-![Screenshot](./screenshots/002.png)
+![Screenshot](https://raw.github.com/erickrdch/rlbb/master/screenshots/002.png)
 
 [example link](http://example.com/)
 
