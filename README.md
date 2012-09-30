@@ -1,4 +1,4 @@
-#"Real Live" Backbone Demo#
+#"Real Life" Backbone Demo#
 
 This is a really simple Backbone demo that aims to show a basic usage of
 Backbone Models and Views; For simplicity the API was build with NodeJS and
