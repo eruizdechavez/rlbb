@@ -62,6 +62,12 @@
         <h3>Register</h3>
       </div>
       <div class="modal-body">
+        <div class="alert alert-error missing hide">
+          <strong>Missing Fields!</strong> Please fill in all the fileds and try again.
+        </div>
+        <div class="alert alert-error duplicated hide">
+          <strong>Wrong Email!</strong> Seems you are already registered, would you like to <button class="btn btn-small inline-login">Login</button> instead?
+        </div>
         <div class="form-horizontal">
           <div class="control-group">
             <label class="control-label" for="register-email">Email</label>
@@ -90,6 +96,15 @@
         <h3>Login</h3>
       </div>
       <div class="modal-body">
+        <div class="alert alert-error missing hide">
+          <strong>Missing Fields!</strong> Please fill in all the fileds and try again.
+        </div>
+        <div class="alert alert-error wrong hide">
+          <strong>Wrong Email or Password!</strong> Oops! Something is wrong, please verify your information and try again!
+        </div>
+        <div class="alert alert-error not-found hide">
+          <strong>Email Not Found!</strong> Seems you are not registered, would you like to <button class="btn btn-small inline-register">Register</button> instead?
+        </div>
         <div class="form-horizontal">
           <div class="control-group">
             <label class="control-label" for="login-email">Email</label>
@@ -141,22 +156,23 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
+        <a href="#" class="btn btn-primary profile-save">Save changes</a>
       </div>
     </div>
 
     <!-- Cancel Modal -->
-    <div class="modal hide fade">
+    <div class="modal hide fade modal-dialog" id="cancel-modal">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3></h3>
+        <h3>:(</h3>
       </div>
       <div class="modal-body">
-        <p></p>
+        <p>Are you sure you want to <strong>Cancel Your Account?</strong></p>
+        <p>All your data on our server will be erased. This action cannot be reverted!</p>
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
+        <a href="#" class="btn" data-dismiss="modal">Don't Cancel</a>
+        <a href="#" class="btn btn-danger cancel-account">Cancel My Account</a>
       </div>
     </div>
 

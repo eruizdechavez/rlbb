@@ -21,7 +21,7 @@ exports.getUser = function (req, res, next) {
 		return res.send({
 			status: 404,
 			message: 'user not found'
-		}, 404);
+		});
 	}
 
 	return res.send({
@@ -99,7 +99,7 @@ exports.hasEmailPassword = function (req, res, next) {
 		return res.send({
 			message: 'missing fields',
 			status: 400
-		}, 400);
+		});
 	}
 
 	return next();
@@ -110,7 +110,7 @@ exports.hasEmailToken = function (req, res, next) {
 		return res.send({
 			message: 'missing fields',
 			status: 400
-		}, 400);
+		});
 	}
 
 	return next();
@@ -121,7 +121,7 @@ exports.userExists = function (req, res, next) {
 		return res.send({
 			message: 'user not found',
 			status: 404
-		}, 404);
+		});
 	}
 
 	return next();
@@ -132,7 +132,7 @@ exports.userNotPresent = function (req, res, next) {
 		return res.send({
 			message: 'email already exist',
 			status: 403
-		}, 403);
+		});
 	}
 
 	return next();
@@ -143,7 +143,7 @@ exports.validEmailPassword = function (req, res, next) {
 		return res.send({
 			message: 'wrong credentials',
 			status: 401
-		}, 401);
+		});
 	}
 
 	return next();
@@ -154,7 +154,7 @@ exports.validEmailToken = function (req, res, next) {
 		return res.send({
 			message: 'wrong credentials',
 			status: 401
-		}, 401);
+		});
 	}
 
 	return next();
