@@ -5,15 +5,19 @@
 	// Main View class. Controlls all events and behaviors of the application.
 	var MainView = Backbone.View.extend({
 
+		// Symbolic Constants
 		CLASS_LOG_IN: 'in',
 		CLASS_LOG_OUT: 'out',
 		PROFILE_IMAGE_PREPEND: 'http://www.gravatar.com/avatar/',
 		PROFILE_IMAGE_APPEND: '?d=identicon&s=100',
 		STORAGE_EMAIL: 'rlbb.email',
 		STORAGE_TOKEN: 'rlbb.token',
-		SERVICE_URL: '/api/users',
-		SERVICE_URL_AUTH: '/api/users/auth',
-		SERVICE_URL_ME: '/api/users/me',
+
+		// Class used to instantiate new User Models internally
+		UserModel: null,
+
+		// Class used to instantiate new State Models internally
+		StateModel: null,
 
 		// A User Model instance
 		user: null,
@@ -40,8 +44,11 @@
 		// Initialize event listeners, and update DOM elements state.
 		initialize: function () {
 			_.bindAll(this);
-			this.user = this.options.user;
-			this.state = this.options.state;
+			this.UserModel = this.options.UserModel;
+			this.StateModel = this.options.StateModel;
+
+			this.user = new this.UserModel();
+			this.state = new this.StateModel();
 
 			this.state.on('change', this.updateState);
 			this.user.on('change', this.updateUser);
@@ -49,13 +56,20 @@
 			this.updateState();
 		},
 
+		// Try to recover user's session from browser storage.
 		recoverState: function () {
 			if (localStorage && localStorage.getItem(this.STORAGE_EMAIL) && localStorage.getItem(this.STORAGE_TOKEN)) {
-				this.getUser(localStorage.getItem(this.STORAGE_EMAIL), localStorage.getItem(this.STORAGE_TOKEN), this.recoverStateSuccess);
+				this.user.set({
+					email: localStorage.getItem(this.STORAGE_EMAIL),
+					token: localStorage.getItem(this.STORAGE_TOKEN)
+				}).fetch({
+					success: this.recoverStateSuccess
+				});
 			}
 		},
 
-		recoverStateSuccess: function (data) {
+		// Auto-login if browser storage data was correct, otherwise logout.
+		recoverStateSuccess: function (model, data) {
 			switch (data.status) {
 			case 200:
 				this.loginSuccess({
@@ -114,13 +128,10 @@
 		register: function () {
 			this.$('#register-modal .alert').addClass('hide');
 
-			$.ajax({
-				url: this.SERVICE_URL,
-				type: 'post',
-				data: {
-					email: this.$('#register-email').val(),
-					password: this.$('#register-password').val()
-				},
+			this.user.save({
+				email: this.$('#register-email').val(),
+				password: this.$('#register-password').val()
+			}, {
 				success: this.registerSuccess
 			});
 		},
@@ -129,10 +140,15 @@
 		// 200 - Everything is good, proceed to login
 		// 400 - Bad Request; Fields are missing
 		// 403 - Forbidden; Email already exists (try to login?)
-		registerSuccess: function (data) {
+		registerSuccess: function (model, data) {
 			switch (data.status) {
 			case 200:
-				this.auth(this.$('#register-email').val(), this.$('#register-password').val(), this.loginSuccess, this.registerError);
+				this.user.set({
+					email: this.$('#register-email').val(),
+					password: this.$('#register-password').val()
+				}).auth({
+					success: this.loginSuccess
+				});
 				break;
 
 			case 400:
@@ -164,7 +180,12 @@
 		// Execute Login service
 		login: function () {
 			this.$('#login-modal .alert').addClass('hide');
-			this.auth(this.$('#login-email').val(), this.$('#login-password').val(), this.loginSuccess, this.loginError);
+			this.user.set({
+				email: this.$('#login-email').val(),
+				password: this.$('#login-password').val()
+			}).auth({
+				success: this.loginSuccess
+			});
 		},
 
 		// Handle Login service response.
@@ -202,30 +223,6 @@
 			}
 		},
 
-		// Authorization service request. Used on registration and login process.
-		auth: function (email, password, success) {
-			$.ajax({
-				url: this.SERVICE_URL_AUTH,
-				type: 'post',
-				data: {
-					email: email,
-					password: password
-				},
-				success: success
-			});
-		},
-
-		getUser: function (email, token, success) {
-			$.ajax({
-				url: this.SERVICE_URL_ME,
-				data: {
-					email: email,
-					token: token
-				},
-				success: success
-			});
-		},
-
 		// Logout current user.
 		// Set an empty model instead of create a new one to avoid loosing
 		// event bindings.
@@ -236,13 +233,13 @@
 				localStorage.removeItem(this.STORAGE_TOKEN);
 			}
 
-			var empty = new UserModel();
+			var empty = new this.UserModel();
 			this.user.set(empty.toJSON());
 
 			this.state.set('loggedIn', false);
 		},
 
-		// Open Profile (Settings) Modal
+		// Open Profile (Settings) modal.
 		profileModal: function () {
 			this.$('#profile-first-name').val(this.user.get('firstName'));
 			this.$('#profile-last-name').val(this.user.get('lastName'));
@@ -251,66 +248,135 @@
 			this.$('#profile-modal').modal();
 		},
 
+		// Execute service call to save user details.
 		profileSave: function () {
-			$.ajax({
-				url: this.SERVICE_URL_ME,
-				type: 'put',
-				data: {
-					email: this.user.get('email'),
-					token: this.user.get('token'),
-					firstName: this.$('#profile-first-name').val(),
-					lastName: this.$('#profile-last-name').val()
-				},
+			this.user.save({
+				firstName: this.$('#profile-first-name').val(),
+				lastName: this.$('#profile-last-name').val()
+			}, {
 				success: this.profileSaveSuccess
 			});
 		},
 
-		profileSaveSuccess: function (data) {
-			this.user.set(data.user);
+		// Handle Profile service response.
+		profileSaveSuccess: function (model, data) {
 			this.state.trigger('change');
 		},
 
+		// Open Cancel account modal.
 		cancelModal: function () {
 			this.$('#cancel-modal').modal();
 		},
 
+		// Execute Cancel account service.
 		cancelAccount: function () {
-			$.ajax({
-				url: this.SERVICE_URL_ME,
-				type: 'delete',
-				data: {
-					email: this.user.get('email'),
-					token: this.user.get('token')
-				},
-				success: this.cancelAccountSuccess
+			this.user.destroy({
+				success: this.logout
 			});
-		},
-
-		cancelAccountSuccess: function (data) {
-			this.logout();
 		}
 	});
 
+	// User Model class. Contains our user data as well as server side basic
+	// logic to keep views clean of AJAX requests.
 	var UserModel = Backbone.Model.extend({
+		// Symbolic Constants
+		SERVICE_URL: '/api/users',
+		SERVICE_URL_AUTH: '/api/users/auth',
+		SERVICE_URL_ME: '/api/users/me',
+
+		// Default attributes for the model
 		defaults: {
 			email: '',
+			password: '',
 			firstName: '',
 			lastName: '',
 			image: '',
 			token: ''
-		}
+		},
+
+		// Override default new check. We do not use "id" so, if the user has a token
+		// then it not a new user.
+		isNew: function () {
+			return this.get('token') === '';
+		},
+
+		// Override default sync. We are using custom url for "me".
+		sync: function (method, model, options) {
+			switch (method) {
+			case 'read':
+				$.ajax(_.extend({
+					url: this.SERVICE_URL_ME,
+					data: {
+						email: this.get('email'),
+						token: this.get('token')
+					}
+				}, options));
+				break;
+
+			case 'create':
+				$.ajax(_.extend({
+					url: this.SERVICE_URL,
+					type: 'post',
+					data: {
+						email: this.get('email'),
+						password: this.get('password')
+					}
+				}, options));
+				break;
+
+			case 'update':
+				$.ajax(_.extend({
+					url: this.SERVICE_URL_ME,
+					type: 'put',
+					data: {
+						email: this.get('email'),
+						token: this.get('token'),
+						firstName: this.get('firstName'),
+						lastName: this.get('lastName')
+					}
+				}, options));
+				break;
+
+			case 'delete':
+				$.ajax(_.extend({
+					url: this.SERVICE_URL_ME,
+					type: 'delete',
+					data: {
+						email: this.get('email'),
+						token: this.get('token')
+					}
+				}, options));
+				break;
+			}
+		},
+
+		// Authorization service request. Used on registration and login process to
+		// fetch a valid token for our user.
+		auth: function (options) {
+			$.ajax(_.extend({
+				url: this.SERVICE_URL_AUTH,
+				type: 'post',
+				data: {
+					email: this.get('email'),
+					password: this.get('password')
+				}
+			}, options));
+		},
 	});
 
+	// State Model class. Really simple, just for binding purposes.
 	var StateModel = Backbone.Model.extend({
 		defaults: {
 			loggedIn: false
 		}
 	});
 
+	// Initialize Main View and let it visible on our Application namespace.
+	// Also, inject Model classes to keep Main View class clean.
 	rlbb.mainView = new MainView({
 		el: 'body',
-		user: new UserModel(),
-		state: new StateModel()
+		UserModel: UserModel,
+		StateModel: StateModel
 	});
 
 }());
