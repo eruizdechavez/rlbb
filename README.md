@@ -6,8 +6,6 @@ Express.
 
 ![Screenshot](https://raw.github.com/erickrdch/rlbb/master/screenshots/002.png)
 
-[example link](http://example.com/)
-
 * Developer: [Erick Ruiz de Chavez](http://erickrdch.com)
 * Server Side: [NodeJS](http://nodejs.org)
 * Server Side Framework: [Express](http://expressjs.com)
