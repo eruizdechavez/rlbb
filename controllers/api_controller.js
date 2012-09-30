@@ -44,13 +44,12 @@ exports.postUsers = function (req, res, next) {
 		password: req.request.password,
 		firstName: '',
 		lastName: '',
-		image: '',
 		updated: Date.now(),
 		token: ''
 	};
 
 	var hash = crypto.createHash('md5');
-	user.token = hash.update(JSON.stringify(user), 'utf8').digest('base64');
+	user.token = hash.update(JSON.stringify(user), 'utf8').digest('hex');
 
 	users[req.request.email] = user;
 
@@ -83,7 +82,7 @@ exports.auth = function (req, res, next) {
 	});
 
 	var hash = crypto.createHash('md5');
-	user.token = hash.update(JSON.stringify(user), 'utf8').digest('base64');
+	user.token = hash.update(JSON.stringify(user), 'utf8').digest('hex');
 
 	users[req.request.email] = user;
 
@@ -173,6 +172,10 @@ function cleanupUser(user) {
 	delete cleanUser.updated;
 	delete cleanUser.password;
 	delete cleanUser.token;
+
+	var hash = crypto.createHash('md5');
+	cleanUser.image = hash.update(user.email, 'utf8').digest('hex');
+
 
 	return cleanUser;
 }

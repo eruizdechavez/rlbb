@@ -46,7 +46,8 @@
 		},
 
 		updateUser: function () {
-			this.$('.firstName').text(this.user.get('firstName'));
+			this.$('.first-name').text(this.user.get('firstName'));
+			this.$('.profile-image').attr('src', 'http://www.gravatar.com/avatar/' + this.user.get('image') + '?d=identicon&s=100');
 		},
 
 		registerModal: function () {
@@ -170,8 +171,7 @@
 					email: this.user.get('email'),
 					token: this.user.get('token'),
 					firstName: this.$('#profile-first-name').val(),
-					lastName: this.$('#profile-last-name').val(),
-					image: this.$('#profile-image').val()
+					lastName: this.$('#profile-last-name').val()
 				},
 				success: this.profileSaveSuccess
 			});
