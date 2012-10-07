@@ -70,18 +70,14 @@
 
 		// Auto-login if browser storage data was correct, otherwise logout.
 		recoverStateSuccess: function (model, data) {
-			switch (data.status) {
-			case 200:
+			if (data.status === 200) {
 				this.loginSuccess({
 					status: 200,
 					user: data.user,
 					token: localStorage.getItem(this.STORAGE_TOKEN)
 				});
-				break;
-
-			default:
+			} else {
 				this.logout();
-				break;
 			}
 		},
 
@@ -361,7 +357,7 @@
 					password: this.get('password')
 				}
 			}, options));
-		},
+		}
 	});
 
 	// State Model class. Really simple, just for binding purposes.
@@ -373,7 +369,7 @@
 
 	// Initialize Main View and let it visible on our Application namespace.
 	// Also, inject Model classes to keep Main View class clean.
-	rlbb.mainView = new MainView({
+	window.rlbb.mainView = new MainView({
 		el: 'body',
 		UserModel: UserModel,
 		StateModel: StateModel

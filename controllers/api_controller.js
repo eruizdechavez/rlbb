@@ -3,6 +3,19 @@ var crypto = require('crypto'),
 
 var users = {};
 
+function cleanupUser(user) {
+	var cleanUser = _.extend({}, user);
+	delete cleanUser.updated;
+	delete cleanUser.password;
+	delete cleanUser.token;
+
+	var hash = crypto.createHash('md5');
+	cleanUser.image = hash.update(user.email, 'utf8').digest('hex');
+
+
+	return cleanUser;
+}
+
 exports.getUsers = function (req, res, next) {
 	return res.send({
 		status: 200,
@@ -124,7 +137,7 @@ exports.userExists = function (req, res, next) {
 	}
 
 	return next();
-}
+};
 
 exports.userNotPresent = function (req, res, next) {
 	if (users.hasOwnProperty(req.request.email)) {
@@ -167,15 +180,3 @@ exports.request = function (req, res, next) {
 	next();
 };
 
-function cleanupUser(user) {
-	var cleanUser = _.extend({}, user);
-	delete cleanUser.updated;
-	delete cleanUser.password;
-	delete cleanUser.token;
-
-	var hash = crypto.createHash('md5');
-	cleanUser.image = hash.update(user.email, 'utf8').digest('hex');
-
-
-	return cleanUser;
-}

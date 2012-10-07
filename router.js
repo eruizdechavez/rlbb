@@ -17,5 +17,5 @@ module.exports = function (app) {
 	app.put('/api/users/me', api.hasEmailToken, api.userExists, api.validEmailToken, api.putUser);
 
 	// Delete current user
-	app.delete('/api/users/me', api.hasEmailToken, api.userExists, api.validEmailToken, api.deleteUser);
+	app['delete']('/api/users/me', api.hasEmailToken, api.userExists, api.validEmailToken, api.deleteUser);
 };
